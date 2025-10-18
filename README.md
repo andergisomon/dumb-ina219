@@ -1,5 +1,5 @@
 # dumb-ina219
-A dumb INA219 driver for the Raspberry Pi, hastily made for a course project. Seems to work, YMMV.
+A dumb INA219 driver for the Raspberry Pi, hastily made for a course project. Seems to work, YMMV. Tested on a Raspberry Pi 5.
 
 # Example
 
