@@ -4,6 +4,8 @@ use i2cdev::core::*;
 use i2cdev::linux::{LinuxI2CDevice, LinuxI2CError};
 
 #[cfg(not(any(target_os = "linux")))]
+mod stub;
+#[cfg(not(any(target_os = "linux")))]
 use crate::stub::{LinuxI2CDevice, LinuxI2CError};
 
 pub mod units;
