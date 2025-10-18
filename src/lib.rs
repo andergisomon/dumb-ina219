@@ -1,6 +1,11 @@
 extern crate i2cdev;
 use i2cdev::core::*;
+#[cfg(any(target_os = "linux"))]
 use i2cdev::linux::{LinuxI2CDevice, LinuxI2CError};
+
+#[cfg(not(any(target_os = "linux")))]
+use crate::stub::{LinuxI2CDevice, LinuxI2CError};
+
 pub mod units;
 use crate::units::*;
 
