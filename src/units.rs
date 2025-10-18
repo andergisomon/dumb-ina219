@@ -1,6 +1,6 @@
 use core::marker::PhantomData; // no need to bring std into this
 // need phantomdata as a zero cost dummy to tell the compiler we're doing something with the generic type
-// we're just trying to enforce SI units into the type system. why? because i have too much free time and why the hell not
+// we're just trying to enforce SI units into the type system. why? because i have too much free time so why the hell not
 
 pub trait Settable {
     fn set_val(&mut self, new_val: f64);
@@ -65,20 +65,20 @@ pub type PowerUnit = Unit<Power>;
 
 impl VoltageUnit {
     pub fn volts(val: f64) -> Self { Self::base(val) }
-    pub fn millivolts(val: f64) -> Self { Self::milli(val) }
+    pub fn millivolts(val: f64) -> Self { Self::milli(val / 1000.0) }
 }
 
 impl CurrentUnit {
     pub fn amps(val: f64) -> Self { Self::base(val) }
-    pub fn milliamps(val: f64) -> Self { Self::milli(val) }
+    pub fn milliamps(val: f64) -> Self { Self::milli(val / 1000.0) }
 }
 
 impl ResistanceUnit {
     pub fn ohms(val: f64) -> Self { Self::base(val) }
-    pub fn milliohms(val: f64) -> Self { Self::milli(val) }
+    pub fn milliohms(val: f64) -> Self { Self::milli(val / 1000.0) }
 }
 
 impl PowerUnit {
     pub fn watts(val: f64) -> Self { Self::base(val) }
-    pub fn milliwatts(val: f64) -> Self { Self::milli(val) }
+    pub fn milliwatts(val: f64) -> Self { Self::milli(val / 1000.0) }
 }

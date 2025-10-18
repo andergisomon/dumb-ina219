@@ -10,6 +10,6 @@ fn main() -> Result<(), LinuxI2CError> {
         TARGET_ADDR)?;
     dev.init()?;
     let current_reading = dev.current()?;
-    println!("{:?}", current_reading.get_val());
+    println!("{:?} mA", current_reading.get_val()*1000.0);
     Ok(())
 }

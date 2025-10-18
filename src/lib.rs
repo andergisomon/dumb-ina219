@@ -43,18 +43,11 @@ impl Ina219 {
 
     /// This **must** be called before calling methods to read voltage/current/power measurements.
     pub fn init(&mut self) -> Result<(), LinuxI2CError> {
-        self.device.write(&[RegAddrs::Cfg as u8, 0x1F as u8, 0xFF as u8])?; // Default config
-        Ok(())
-    }
-
-    fn calibrate(&mut self) -> Result<(), LinuxI2CError> {
         let current_lsb_val = self.max_expected_current.get_val() / 32768.0;
         self.current_lsb.set_val(current_lsb_val);
 
-        let power_lsb_val = 20.0 * current_lsb;
+        let power_lsb_val = 20.0 * current_lsb_val;
         self.power_lsb.set_val(power_lsb_val);
-
-        // self.device.write(&[self.i2c_address])?;
         self.device.write(&[RegAddrs::Cfg as u8, 0x1F as u8, 0xFF as u8])?; // Default config
         Ok(())
     }
@@ -74,9 +67,10 @@ impl Ina219 {
     pub fn current(&mut self) -> Result<CurrentUnit, LinuxI2CError> {
         let mut buf: [u8; 2] = [0; 2];
         self.calibrate()?;
+        // self.device.write(&[self.i2c_address])?;
         self.device.write(&[RegAddrs::Current as u8])?;
         self.device.read(&mut buf)?;
         let val = ((i16::from_be_bytes(buf)) as f64)  * self.current_lsb.get_val();
-        Ok(CurrentUnit::milliamps(val))
+        Ok(CurrentUnit::amps(val))
     }
 }
