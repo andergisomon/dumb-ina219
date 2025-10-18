@@ -9,7 +9,15 @@ fn main() -> Result<(), LinuxI2CError> {
         CurrentUnit::milliamps(1000.0),
         TARGET_ADDR)?;
     dev.init()?;
-    let current_reading = dev.current()?;
-    println!("{:?} mA", current_reading.get_val()*1000.0);
+    let current_reading = dev.load_current()?;
+    let shunt_voltage_reading = dev.shunt_voltage()?;
+    let bus_voltage_reading = dev.bus_voltage()?;
+    let power_reading = dev.power()?;
+
+
+    println!("Load current: {:?} mA", current_reading.get_val()*1000.0);
+    println!("Shunt voltage: {:?} mV", shunt_voltage_reading.get_val()*1000.0);
+    println!("Bus voltage: {:?} V", bus_voltage_reading.get_val());
+    println!("Power: {:?} mW", power_reading.get_val());
     Ok(())
 }

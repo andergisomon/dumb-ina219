@@ -67,14 +67,36 @@ impl Ina219 {
         Ok(())
     }
 
-    // pub fn shunt_voltage(&self) -> Result<VoltageUnit, LinuxI2CError> {
-    //     self.device.write(data)
-    // }
-
-    pub fn current(&mut self) -> Result<CurrentUnit, LinuxI2CError> {
+    pub fn shunt_voltage(&mut self) -> Result<VoltageUnit, LinuxI2CError> {
         let mut buf: [u8; 2] = [0; 2];
         self.calibrate()?;
-        // self.device.write(&[self.i2c_address])?;
+        self.device.write(&[RegAddrs::ShuntVoltage as u8])?;
+        self.device.read(&mut buf)?;
+        let val = (i16::from_be_bytes(buf)) as f64;
+        Ok(VoltageUnit::volts(val*0.00001)) // 10uV step size: 10uV * (1V / 10^6 uV)
+    }
+
+    pub fn bus_voltage(&mut self) -> Result<VoltageUnit, LinuxI2CError> {
+        let mut buf: [u8; 2] = [0; 2];
+        self.calibrate()?;
+        self.device.write(&[RegAddrs::BusVoltage as u8])?;
+        self.device.read(&mut buf)?;
+        let val = (i16::from_be_bytes(buf)) as f64;
+        Ok(VoltageUnit::volts(val*0.004)) // 4mV step size: 4mV * (1V / 1000 mV)
+    }
+
+    pub fn power(&mut self) -> Result<PowerUnit, LinuxI2CError> {
+        let mut buf: [u8; 2] = [0; 2];
+        self.calibrate()?;
+        self.device.write(&[RegAddrs::Power as u8])?;
+        self.device.read(&mut buf)?;
+        let val = (i16::from_be_bytes(buf)) as f64;
+        Ok(PowerUnit::watts(val))
+    }
+
+    pub fn load_current(&mut self) -> Result<CurrentUnit, LinuxI2CError> {
+        let mut buf: [u8; 2] = [0; 2];
+        self.calibrate()?;
         self.device.write(&[RegAddrs::Current as u8])?;
         self.device.read(&mut buf)?;
         let val = ((i16::from_be_bytes(buf)) as f64)  * self.current_lsb.get_val();
