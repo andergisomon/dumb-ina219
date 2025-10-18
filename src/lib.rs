@@ -18,7 +18,7 @@ pub struct Ina219 {
     max_expected_current: CurrentUnit,
     current_lsb: CurrentUnit,
     power_lsb: PowerUnit,
-    i2c_address: u16,
+    i2c_address: u8,
     device: LinuxI2CDevice,
 }
 
@@ -27,7 +27,7 @@ impl Ina219 {
     pub fn new(
         shunt_resistance: ResistanceUnit,
         max_expected_current: CurrentUnit,
-        address: u16,
+        address: u8,
     ) -> Result<Self, LinuxI2CError> {
         Ok(
             Self {
@@ -36,7 +36,7 @@ impl Ina219 {
                 current_lsb: CurrentUnit::milliamps(0.0),
                 power_lsb: PowerUnit::milliwatts(0.0),
                 i2c_address: address,
-                device: LinuxI2CDevice::new("/dev/i2c-1", address)?
+                device: LinuxI2CDevice::new("/dev/i2c-1", address as u16)?
             }
         )
     }
@@ -48,9 +48,13 @@ impl Ina219 {
     }
 
     fn calibrate(&mut self) -> Result<(), LinuxI2CError> {
-        let current_lsb = self.max_expected_current.get_val() / 32768.0;
-        let power_lsb = 20.0 * current_lsb;
-        let cal = (0.04096 / (current_lsb * self.shunt_resistance.get_val())).trunc() as u16;
+        let current_lsb_val = self.max_expected_current.get_val() / 32768.0;
+        self.current_lsb.set_val(current_lsb_val);
+
+        let power_lsb_val = 20.0 * current_lsb;
+        self.power_lsb.set_val(power_lsb_val);
+
+        let cal = (0.04096 / (current_lsb_val * self.shunt_resistance.get_val())).trunc() as u16;
         self.device.write(
             &[RegAddrs::Calibration as u8, (cal >> 8) as u8, cal as u8]
         )?;
