@@ -54,7 +54,13 @@ impl Ina219 {
         let power_lsb_val = 20.0 * current_lsb;
         self.power_lsb.set_val(power_lsb_val);
 
-        let cal = (0.04096 / (current_lsb_val * self.shunt_resistance.get_val())).trunc() as u16;
+        // self.device.write(&[self.i2c_address])?;
+        self.device.write(&[RegAddrs::Cfg as u8, 0x1F as u8, 0xFF as u8])?; // Default config
+        Ok(())
+    }
+
+    fn calibrate(&mut self) -> Result<(), LinuxI2CError> {
+        let cal = (0.04096 / (self.current_lsb.get_val() * self.shunt_resistance.get_val())).trunc() as u16;
         self.device.write(
             &[RegAddrs::Calibration as u8, (cal >> 8) as u8, cal as u8]
         )?;
