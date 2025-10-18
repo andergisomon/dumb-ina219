@@ -2,7 +2,7 @@
 A dumb INA219 driver for the Raspberry Pi, hastily made for a course project. Seems to work, YMMV. Tested on a Raspberry Pi 5.
 
 ## What works
-Everything except bus voltage. Gives unsound readings from limited testing.
+Everything seems to work from  limited testing.
 
 # Example
 

@@ -81,7 +81,7 @@ impl Ina219 {
         self.calibrate()?;
         self.device.write(&[RegAddrs::BusVoltage as u8])?;
         self.device.read(&mut buf)?;
-        let val = (i16::from_be_bytes(buf)) as f64;
+        let val = (i16::from_be_bytes(buf) >> 3) as f64;
         Ok(VoltageUnit::volts(val*0.004)) // 4mV step size: 4mV * (1V / 1000 mV)
     }
 
@@ -91,7 +91,7 @@ impl Ina219 {
         self.device.write(&[RegAddrs::Power as u8])?;
         self.device.read(&mut buf)?;
         let val = (i16::from_be_bytes(buf)) as f64;
-        Ok(PowerUnit::watts(val))
+        Ok(PowerUnit::watts(val * self.power_lsb.get_val()))
     }
 
     pub fn load_current(&mut self) -> Result<CurrentUnit, LinuxI2CError> {
