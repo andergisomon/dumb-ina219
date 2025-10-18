@@ -1,0 +1,20 @@
+[package]
+name = "dumb-ina219"
+version = "0.1.0"
+edition = "2024"
+license = "GPL-3.0-only"
+keywords = ["raspberry-pi", "ina-219", "current-sensor", "voltage-sensor", "raspberry-pi-5"]
+categories = ["hardware-support"]
+description = "gpio-cdev-based driver for HC-SR04 on the Raspberry Pi 5."
+readme = "README.md"
+repository = "https://github.com/andergisomon/dumb-ina219"
+
+[[example]]
+name = "ina219_xmpl"
+path = "usage_example/example.rs"
+
+[dependencies]
+i2cdev = "0.6.1"
+
+[build]
+target = "aarch64-unknown-linux-gnu"
