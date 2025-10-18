@@ -56,4 +56,13 @@ impl Ina219 {
     // pub fn shunt_voltage(&self) -> Result<VoltageUnit, LinuxI2CError> {
     //     self.device.write(data)
     // }
+
+    pub fn current(&mut self) -> Result<CurrentUnit, LinuxI2CError> {
+        let mut buf: [u8; 2] = [0; 2];
+        self.calibrate()?;
+        self.device.write(&[RegAddrs::Current as u8])?;
+        self.device.read(&mut buf)?;
+        let val = ((i16::from_be_bytes(buf)) as f64)  * self.current_lsb.get_val();
+        Ok(CurrentUnit::milliamps(val))
+    }
 }
