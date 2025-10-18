@@ -25,16 +25,20 @@ pub struct Ina219 {
 impl Ina219 {
     /// You **must** init after creating a new INA219 instance.
     pub fn new(
-        &mut self,
         shunt_resistance: ResistanceUnit,
         max_expected_current: CurrentUnit,
         address: u16,
-    ) -> Result<(), LinuxI2CError> {
-        self.shunt_resistance = shunt_resistance;
-        self.max_expected_current = max_expected_current;
-        self.i2c_address = address;
-        self.device = LinuxI2CDevice::new("/dev/i2c-1", address)?;
-        Ok(())
+    ) -> Result<Self, LinuxI2CError> {
+        Ok(
+            Self {
+                shunt_resistance: shunt_resistance,
+                max_expected_current: max_expected_current,
+                current_lsb: CurrentUnit::milliamps(0.0),
+                power_lsb: PowerUnit::milliwatts(0.0),
+                i2c_address: address,
+                device: LinuxI2CDevice::new("/dev/i2c-1", address)?
+            }
+        )
     }
 
     /// This **must** be called before calling methods to read voltage/current/power measurements.
