@@ -1,5 +1,6 @@
 // Need to satisfy cargo to publish
 // src/i2c_stub.rs
+// none of this is useful, just to pass cargo so it can be published
 use std::io;
 
 pub struct LinuxI2CDevice;
