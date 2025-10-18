@@ -10,7 +10,7 @@ pub trait Gettable {
     fn get_val(&self) -> f64;
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub enum UnitKind {
     Base,
     Milli,
@@ -18,8 +18,8 @@ pub enum UnitKind {
 
 #[derive(Debug, Clone, Copy)]
 pub struct Unit<T> {
-    val: f64,
-    kind: UnitKind,
+    pub val: f64,
+    pub kind: UnitKind,
     _marker: PhantomData<T>,
 }
 
