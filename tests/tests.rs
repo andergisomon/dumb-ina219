@@ -19,7 +19,7 @@ mod tests {
 
         // Test milli unit (Milliamps)
         let c_milli = CurrentUnit::milliamps(250.0);
-        assert_eq!(c_milli.val, 250.0);
+        assert_eq!(c_milli.val, 250.0 / 1000.0);
         assert_eq!(c_milli.kind, UnitKind::Milli);
 
         // Test base unit (Ohms)
@@ -29,7 +29,7 @@ mod tests {
 
         // Test milli unit (Milliwatts)
         let p_milli = PowerUnit::milliwatts(50.0);
-        assert_eq!(p_milli.val, 50.0);
+        assert_eq!(p_milli.val, 50.0 / 1000.0);
         assert_eq!(p_milli.kind, UnitKind::Milli);
     }
 
@@ -41,7 +41,7 @@ mod tests {
 
         // Check if get_val returns the correct value
         assert_eq!(v.get_val(), INITIAL_VOLTAGE);
-        assert_eq!(c.get_val(), 250.0);
+        assert_eq!(c.get_val(), 250.0 / 1000.0);
     }
 
     #[test]

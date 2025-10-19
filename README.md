@@ -27,10 +27,9 @@ fn main() -> Result<(), LinuxI2CError> {
     println!("Load current: {:?} mA", current_reading.get_val()*1000.0);
     println!("Shunt voltage: {:?} mV", shunt_voltage_reading.get_val()*1000.0);
     println!("Bus voltage: {:?} V", bus_voltage_reading.get_val());
-    println!("Power: {:?} mW", power_reading.get_val());
+    println!("Power: {:?} mW", power_reading.get_val()*1000.0);
     Ok(())
 }
-
 ```
 
 ## Notes to dev
