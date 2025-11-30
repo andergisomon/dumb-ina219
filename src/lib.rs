@@ -2,6 +2,7 @@ extern crate i2cdev;
 use i2cdev::core::*;
 #[cfg(any(target_os = "linux"))]
 use i2cdev::linux::{LinuxI2CDevice, LinuxI2CError};
+use std::{thread::sleep, time::Duration};
 
 #[cfg(not(any(target_os = "linux")))]
 mod stub;
@@ -50,6 +51,7 @@ impl Ina219 {
 
     /// This **must** be called before calling methods to read voltage/current/power measurements.
     pub fn init(&mut self) -> Result<(), LinuxI2CError> {
+        sleep(Duration::from_millis(650)); // slight delay after bus init
         let current_lsb_val = self.max_expected_current.get_val() / 32768.0;
         self.current_lsb.set_val(current_lsb_val);
 
